@@ -23,11 +23,11 @@ Route::prefix('item')->namespace('Item')->group(function () {
 });
 
 // ログインが必要
-Route::middleware('auth.basic')->group(function () {
+//Route::middleware('auth.basic')->group(function () {
     Route::prefix('item')->namespace('Item')->group(function () {
         Route::post('/save', 'ItemApiController@save');
     });
-});
+//});
 
 Route::prefix('category')->group(function () {
     Route::get('/get_sub_category', 'Item\ItemApiController@getSubCategory');

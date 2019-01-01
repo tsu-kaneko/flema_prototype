@@ -2,45 +2,41 @@
 
 namespace App\Http\Controllers\Item;
 
-use App\Http\Controllers\Controller;
-use \Illuminate\Http\Request;
 use App\Http\Repository\MainCategoryRepository;
+use App\Http\Controllers\Controller;
 use App\Http\Repository\Repository;
-//use App\Http\Repository\CategoryRepository;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class ItemController
+ * @package App\Http\Controllers\Item
+ */
 class ItemController extends Controller
 {
+    /**
+     * @var MainCategoryRepository
+     */
     private $mainCategoryRepository;
-//    private $Repository;
-//    private $categoryRepository;
 
-    public function __construct(MainCategoryRepository $mainCategoryRepository
-//                                SubCategoryRepository $subCategoryRepository,
-//                                CategoryRepository $categoryRepository
-    )
+    public function __construct(MainCategoryRepository $mainCategoryRepository)
     {
         $this->mainCategoryRepository = $mainCategoryRepository;
-//        $this->subCategoryRepository = $subCategoryRepository;
-//        $this->categoryRepository = $categoryRepository;
     }
 
+
     /**
-     * トップページ
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 商品一覧
      */
-    public function index()
+    public function list(): View
     {
-        return view('index');
+        return view('list');
     }
 
     /**
      * 商品詳細
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function detail(Request $request)
+    public function detail(Request $request): View
     {
         $id = $request->get('id');
 
@@ -49,10 +45,8 @@ class ItemController extends Controller
     
     /**
      * 商品の出品
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         // カテゴリーの取得
         $mainCategories = $this->mainCategoryRepository->get();
@@ -64,10 +58,8 @@ class ItemController extends Controller
 
     /**
      * 商品の出品
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Request $request)
+    public function edit(Request $request): View
     {
         $id = $request->get('id');
 

@@ -15,15 +15,21 @@
 //    return view('welcome');
 //});
 
-Route::get('/', 'Item\ItemController@index');
-Route::get('/detail', 'Item\ItemController@detail');
+Route::prefix('/')->namespace('Item')->group(function () {
+    Route::get('/', 'ItemController@list');
+    Route::get('/detail', 'ItemController@detail');
+});
 
 // ユーザー画面
 Route::get('/create', 'Item\ItemController@create');
 Route::get('/edit', 'Item\ItemController@edit');
 
 
-
+// 認証のルーティング
+//Route::middleware('auth')->group(function () {
+//    Route::get('/', 'Item\ItemController@index');
+//    Route::get('/detail', 'Item\ItemController@detail');
+//});
 
 
 // prefix namespace group

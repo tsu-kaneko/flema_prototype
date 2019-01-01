@@ -2,12 +2,14 @@
 
 namespace App\Http\Repository;
 
-use App\Image;
 use App\Item;
 use DB;
 
 class ItemRepository
 {
+    /**
+     * 検索
+     */
     public function search(array $param)
     {
         $builder = DB::table('items')
@@ -51,6 +53,9 @@ class ItemRepository
         return $builder->get();
     }
 
+    /**
+     * 詳細
+     */
     public function get(int $id)
     {
         return DB::table('items as a')
@@ -67,6 +72,9 @@ class ItemRepository
             ->first();
     }
 
+    /**
+     * 追加
+     */
     public function add(int $user_ud, array $itemEntity)
     {
         $item = new Item();
@@ -86,6 +94,9 @@ class ItemRepository
         return $item->getKey();
     }
 
+    /**
+     * 更新
+     */
     public function update()
     {
 

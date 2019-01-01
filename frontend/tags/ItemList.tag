@@ -68,110 +68,112 @@
         </li>
     </ul>
 
-<script>
-    const SEARCH_URL = '/api/item/search';
 
-    this.param = {
-        name: '',
-        sort: 'created_at',
-        order: 'desc',
-        main_category_id: null,
-        sub_category_id: null,
-        category_id: null,
-        size: null,
-        minPrice: null,
-        maxPrice: null,
-        status: null,
-        is_unbuyable: null
-    }
+    <script>
+        const SEARCH_URL = '/api/item/search';
 
-    this.items = [];
+        this.param = {
+            name: '',
+            sort: 'created_at',
+            order: 'desc',
+            main_category_id: null,
+            sub_category_id: null,
+            category_id: null,
+            size: null,
+            minPrice: null,
+            maxPrice: null,
+            status: null,
+            is_unbuyable: null
+        }
 
-    this.on('mount', function() {
-      this._search();
-    });
+        this.items = [];
 
-    // 検索
-    _search(){
-      $(function(){
-          $.ajax({
-                url:SEARCH_URL,
-                type:'POST',
-                data:this.param
-            })
-            .done( (items) => {
-                // アサイン方法変更
-                this.items = items;
-                this.update();
-                console.log(this.items);
+        this.on('mount', function() {
+          this._search();
+        });
 
-            })
-            .fail( (data) => {
-                console.log(data);
-            })
-            .always( (data) => {
-                // console.log('getItemList finished');
-            });
-      }.bind(this));
+        // TODO ajax処理のモジュール化
+        /**
+         * 検索
+         */
+        _search(){
+          $(function(){
+              $.ajax({
+                    url:SEARCH_URL,
+                    type:'POST',
+                    data:this.param
+                })
+                .done( (items) => {
+                    // TODO アサイン方法変更
+                    this.items = items;
+                    this.update();
+                    console.log(this.items);
+                })
+                .fail( (data) => {
+                    console.log(data);
+                })
+                .always( (data) => {
+                    // console.log('getItemList finished');
+                });
+          }.bind(this));
+        }
 
-    }
+        // 商品名の変更
+        changeName(e){
+            var name = e.target.value;
+            if (this.param['name'] != name) {
+                console.log('call _search');
+                this.param['name'] = name;
+                this._search();
+            }
+        }
 
-    // 商品名の変更
-    changeName(e){
-        var name = e.target.value;
-        if (this.param['name'] != name) {
-            console.log('call _search');
-            this.param['name'] = name;
+        // 並び替えの変更
+        changeSort(e){
+            var sortCode = e.target.value;
+
+            switch (sortCode) {
+                case '0':
+                    this.param['sort'] = 'created_at';
+                    this.param['order'] = 'desc';
+                    break;
+                case '1':
+                    this.param['sort'] = 'price';
+                    this.param['order'] = 'asc';
+                    break;
+                case '2':
+                    this.param['sort'] = 'price';
+                    this.param['order'] = 'desc';
+                    break;
+                default:
+                    break;
+            }
+
             this._search();
         }
-    }
 
-    // 並び替えの変更
-    changeSort(e){
-        var sortCode = e.target.value;
-
-        switch (sortCode) {
-            case '0':
-                this.param['sort'] = 'created_at';
-                this.param['order'] = 'desc';
-                break;
-            case '1':
-                this.param['sort'] = 'price';
-                this.param['order'] = 'asc';
-                break;
-            case '2':
-                this.param['sort'] = 'price';
-                this.param['order'] = 'desc';
-                break;
-            default:
-                break;
+        // 料金の変更
+        changePrice(k, e){
+            this.param[k] = e.target.value;
+            this._search();
         }
 
-        this._search();
-    }
+        // カテゴリ
+        changeCategory(){
 
-    // 料金の変更
-    changePrice(k, e){
-        this.param[k] = e.target.value;
-        this._search();
-    }
+        }
 
-    // カテゴリ
-    changeCategory(){
+        // 状態
+        changeStatus(e){
+            this.param['status'] = e.target.value;
+            this._search();
+        }
 
-    }
+        // 販売状況
+        changeSales(e){
+            this.param['is_unbuyable'] = e.target.value;
+            this._search();
+        }
 
-    // 状態
-    changeStatus(e){
-        this.param['status'] = e.target.value;
-        this._search();
-    }
-
-    // 販売状況
-    changeSales(e){
-        this.param['is_unbuyable'] = e.target.value;
-        this._search();
-    }
-
-</script>
+    </script>
 </ItemList>

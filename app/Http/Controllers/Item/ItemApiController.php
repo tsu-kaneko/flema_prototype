@@ -2,69 +2,80 @@
 
 namespace App\Http\Controllers\Item;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Item\Service\ItemApiService;
-use App\Http\Repository\CategoryRepository;
 use App\Http\Repository\MainCategoryRepository;
 use App\Http\Repository\SubCategoryRepository;
-use \Illuminate\Http\Request;
+use App\Http\Repository\CategoryRepository;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Response;
 
+/**
+ * Class ItemApiController
+ * @package App\Http\Controllers\Item
+ */
 class ItemApiController extends Controller
 {
-    private $service = null;
+    /**
+     * @var ItemApiService
+     */
+    private $service;
 
-    private $mainCategoryRepository = null;
+    /**
+     * @var MainCategoryRepository
+     */
+    private $mainCategoryRepository;
 
-    private $subCategoryRepository = null;
+    /**
+     * @var SubCategoryRepository
+     */
+    private $subCategoryRepository;
 
-    private $categoryRepository = null;
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
 
     public function __construct(
         ItemApiService $service,
         MainCategoryRepository $mainCategoryRepository,
         SubCategoryRepository $subCategoryRepository,
-        CategoryRepository $categoryRepository)
-    {
+        CategoryRepository $categoryRepository
+    ){
         $this->service = $service;
         $this->mainCategoryRepository = $mainCategoryRepository;
         $this->subCategoryRepository = $subCategoryRepository;
         $this->categoryRepository = $categoryRepository;
     }
 
+
     /**
-     * 商品の一覧検索 TODO 名称変更
-     *
-     * @param Request $request
-     * @return mixed
+     * 一覧検索 TODO 名称変更
      */
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $param = $request->all();
 
         $items = $this->service->search($param);
         
-        return \Response::json($items);
+        return Response::json($items);
     }
 
     /**
-     * 商品の詳細取得
-     *
-     * @param Request $request
-     * @return mixed
+     * 詳細取得
      */
-    public function get(Request $request)
+    public function get(Request $request): JsonResponse
     {
         $item = $this->service->getDetail($request->get('id'));
 
-        return \Response::json($item);
+        return Response::json($item);
     }
 
     /**
-     * 商品の新規追加
-     *
-     * @param Request $request
+     * 新規追加
      */
-    public function save(Request $request)
+    public function save(Request $request): void
     {
         $itemEntity = $request->all();
 
@@ -80,33 +91,27 @@ class ItemApiController extends Controller
 
     /**
      * メインカテゴリーIDに紐付くサブカテゴリー一覧の取得
-     *
-     * @param Request $request
-     * @return mixed
      */
-    public function getSubCategory(Request $request)
+    public function getSubCategory(Request $request): JsonResponse
     {
         $id = $request->get('id');
 
         $subCategories = $this->subCategoryRepository->findByMainCategoryId($id);
         
-        return \Response::json($subCategories);
+        return Response::json($subCategories);
 
     }
 
     /**
      * サブカテゴリーIDに紐付くカテゴリー一覧の取得
-     *
-     * @param Request $request
-     * @return mixed
      */
-    public function getCategory(Request $request)
+    public function getCategory(Request $request): JsonResponse
     {
         $subCategoryId = $request->get('id');
 
         $categories = $this->categoryRepository->findBySubCategoryId($subCategoryId);
 
-        return \Response::json($categories);
+        return Response::json($categories);
     }
 
 }
