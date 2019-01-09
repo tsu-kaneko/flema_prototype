@@ -70,6 +70,8 @@
 
 
     <script>
+        import Ajax from '../src/classes/Component/Ajax';
+
         const SEARCH_URL = '/api/item/search';
 
         this.param = {
@@ -89,7 +91,7 @@
         this.items = [];
 
         this.on('mount', function() {
-          this._search();
+            this._search();
         });
 
         // TODO ajax処理のモジュール化
@@ -97,25 +99,19 @@
          * 検索
          */
         _search(){
-          $(function(){
-              $.ajax({
-                    url:SEARCH_URL,
-                    type:'POST',
-                    data:this.param
-                })
-                .done( (items) => {
+            Ajax.post(SEARCH_URL, {data:this.param},
+                // 成功時
+                function (data) {
                     // TODO アサイン方法変更
-                    this.items = items;
+                    this.items = data;
                     this.update();
                     console.log(this.items);
-                })
-                .fail( (data) => {
-                    console.log(data);
-                })
-                .always( (data) => {
-                    // console.log('getItemList finished');
-                });
-          }.bind(this));
+                }.bind(this),
+                // 失敗時
+                function (e) {
+                    console.log(e);
+                }.bind(this)
+            );
         }
 
         // 商品名の変更

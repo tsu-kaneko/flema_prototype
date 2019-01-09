@@ -35,7 +35,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tag$/,
+        test: /\.(tag|js|jsx)$/,
         exclude: /node_modules/,
         loader: 'riotjs-loader'
       }
